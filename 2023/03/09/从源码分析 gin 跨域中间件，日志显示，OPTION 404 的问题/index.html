@@ -1,92 +1,159 @@
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang=en>
 <head>
-  <meta charset="utf-8">
-  
-  <title>从源码分析gin跨域中间件，日志显示，OPTION404的问题 | liooooo</title>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="其实这是一个很简单的细节问题  这是一个很简单的例子 123456789101112131415161718192021222324252627282930313233343536373839404142func Cors() gin.HandlerFunc &amp;#123;	return func(context *gin.Context) &amp;#123;		method :&#x3D; context.Re">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题">
+<meta property="og:url" content="http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="liooooo">
+<meta property="og:description" content="其实这是一个很简单的细节问题  这是一个很简单的例子 123456789101112131415161718192021222324252627282930313233343536373839404142func Cors() gin.HandlerFunc &amp;#123;	return func(context *gin.Context) &amp;#123;		method :&#x3D; context.Re">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://halalala-blog.oss-cn-beijing.aliyuncs.com/Blog/20230309150145.png">
+<meta property="og:image" content="https://halalala-blog.oss-cn-beijing.aliyuncs.com/Blog/20230309150205.png">
+<meta property="og:image" content="https://halalala-blog.oss-cn-beijing.aliyuncs.com/Blog/20230309150224.png">
+<meta property="og:image" content="https://halalala-blog.oss-cn-beijing.aliyuncs.com/Blog/20230309150235.png">
+<meta property="article:published_time" content="2023-03-09T06:37:58.000Z">
+<meta property="article:modified_time" content="2023-03-09T09:01:25.251Z">
+<meta property="article:author" content="halalala222">
+<meta property="article:tag" content="golang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://halalala-blog.oss-cn-beijing.aliyuncs.com/Blog/20230309150145.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
 
-  
-  <meta name="author" content="halalala222">
-  
-
-  
-  <meta name="description" content="其实这是一个很简单的细节问题
-
-这是一个很简单的例子
-123456789101112131415161718192021222324252627282930313233343536373839404142func Cors() gin.HandlerFunc &amp;#123;	return func(c">
-  
-
-  
-  
-  <meta name="keywords" content="golang">
-  
-
-  <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-
-  <meta property="og:title" content="从源码分析gin跨域中间件，日志显示，OPTION404的问题"/>
-
-  <meta property="og:site_name" content="liooooo"/>
-
-  
-  <meta property="og:image" content="/favicon.ico"/>
-  
-
-  <link href="/favicon.ico" rel="icon">
-  <link rel="alternate" href="/atom.xml" title="liooooo" type="application/atom+xml">
-  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
 <meta name="generator" content="Hexo 6.3.0"></head>
 
-
-<body>
-<div class="blog">
-  <div class="content">
-
-    <header>
-  <div class="site-branding">
-    <h1 class="site-title">
-      <a href="/">liooooo</a>
-    </h1>
-    <p class="site-description"></p>
-  </div>
-  <nav class="site-navigation">
-    <ul>
-      
-        <li><a href="/">Home</a></li>
-      
-        <li><a href="/archives">Archives</a></li>
-      
-    </ul>
-  </nav>
-</header>
-
-    <main class="site-main posts-loop">
-    <article>
-
-  
+<body class="max-width mx-auto px3 ltr">
     
-    <h3 class="article-title"><span>从源码分析gin跨域中间件，日志显示，OPTION404的问题</span></h3>
-    
-  
-
-  <div class="article-top-meta">
-    <span class="posted-on">
-      <a href="/2023/03/09/从源码分析 gin 跨域中间件，日志显示，OPTION 404 的问题/" rel="bookmark">
-        <time class="entry-date published" datetime="2023-03-09T06:37:58.000Z">
-          2023-03-09
-        </time>
-      </a>
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/halalala222">Projects</a></li><!--
+     -->
+      </ul>
     </span>
-  </div>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2023/03/09/hello-world/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/&text=从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/&title=从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/&is_video=false&description=从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题&body=Check out this article: http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/&title=从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/&title=从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/&title=从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/&title=从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/&name=从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/&t=从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%91%A2%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">为什么呢？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">解决方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Use-vs-Use"><span class="toc-number">3.</span> <span class="toc-text">Use() vs Use()</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%82%B9%E8%BF%9B-e-%E7%9A%84-Use"><span class="toc-number">3.0.1.</span> <span class="toc-text">点进 e 的 Use()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%82%B9%E8%BF%9B-admin-%E7%9A%84-User"><span class="toc-number">3.0.2.</span> <span class="toc-text">点进 admin 的 User()</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gin-%E7%9A%84%E6%BA%90%E7%A0%81%E5%AF%BC%E8%87%B4%E7%9A%84%E5%B7%AE%E5%BC%82%E5%8E%9F%E5%9B%A0%E3%80%82"><span class="toc-number">4.</span> <span class="toc-text">Gin 的源码导致的差异原因。</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Engine-%E7%BB%93%E6%9E%84%E4%BD%93"><span class="toc-number">4.0.1.</span> <span class="toc-text">Engine 结构体</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HandlersChain"><span class="toc-number">4.0.2.</span> <span class="toc-text">HandlersChain</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#engine-Group"><span class="toc-number">4.0.3.</span> <span class="toc-text">engine.Group()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#RouterGroup"><span class="toc-number">4.0.4.</span> <span class="toc-text">RouterGroup</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#methodTrees"><span class="toc-number">4.0.5.</span> <span class="toc-text">methodTrees</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#addRoute"><span class="toc-number">4.0.6.</span> <span class="toc-text">addRoute()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E5%BA%94%E8%B7%AF%E7%94%B1%E7%9A%84-handle"><span class="toc-number">4.0.7.</span> <span class="toc-text">对应路由的 handle()</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84-POST-PUT-GET-DELETE-%E8%AF%B7%E6%B1%82"><span class="toc-number">4.0.7.1.</span> <span class="toc-text">常见的 POST　PUT　GET　DELETE　请求</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#handleHTTPRequest"><span class="toc-number">4.0.7.2.</span> <span class="toc-text">handleHTTPRequest</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E4%BA%8E-OPTIONS-%E8%AF%B7%E6%B1%82"><span class="toc-number">4.0.8.</span> <span class="toc-text">对于 OPTIONS 请求</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#serveError"><span class="toc-number">4.0.8.1.</span> <span class="toc-text">serveError()</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#c-Next"><span class="toc-number">4.0.8.2.</span> <span class="toc-text">c.Next()</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#rebuild404Handlers"><span class="toc-number">4.0.8.3.</span> <span class="toc-text">rebuild404Handlers()</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%94%B9%E5%8F%98"><span class="toc-number">4.0.9.</span> <span class="toc-text">改变</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8E%9F%E5%9B%A0"><span class="toc-number">4.0.9.1.</span> <span class="toc-text">原因</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E4%BA%8E-POST-%E8%AF%B7%E6%B1%82"><span class="toc-number">4.0.10.</span> <span class="toc-text">对于 POST 请求</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题
+    </h1>
 
 
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">halalala222</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-03-09T06:37:58.000Z" itemprop="datePublished">2023-03-09</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/golang/" rel="tag">golang</a>
+    </div>
+
+
+    </div>
+  </header>
   
 
-  <div class="article-content">
-    <div class="entry">
-      
-        <blockquote>
+  <div class="content" itemprop="articleBody">
+    <blockquote>
 <p>其实这是一个很简单的细节问题</p>
 </blockquote>
 <p>这是一个很简单的例子</p>
@@ -166,56 +233,142 @@
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(engine *Engine)</span></span> handleHTTPRequest(c *Context) &#123;</span><br><span class="line">	httpMethod := c.Request.Method</span><br><span class="line">	rPath := c.Request.URL.Path</span><br><span class="line">	……</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Find root of the tree for the given HTTP method</span></span><br><span class="line">	t := engine.trees</span><br><span class="line">    <span class="comment">// handleHTTPRequest 中对于 POST 的主体</span></span><br><span class="line">	<span class="keyword">for</span> i, tl := <span class="number">0</span>, <span class="built_in">len</span>(t); i &lt; tl; i++ &#123;</span><br><span class="line">		<span class="keyword">if</span> t[i].method != httpMethod &#123;</span><br><span class="line">			<span class="keyword">continue</span></span><br><span class="line">		&#125;</span><br><span class="line">        <span class="comment">// 找到 POST 方法对应的 root *node</span></span><br><span class="line">		root := t[i].root</span><br><span class="line">		<span class="comment">// Find route in tree</span></span><br><span class="line">		value := root.getValue(rPath, c.params, c.skippedNodes, unescape)</span><br><span class="line">		<span class="keyword">if</span> value.params != <span class="literal">nil</span> &#123;</span><br><span class="line">			c.Params = *value.params</span><br><span class="line">		&#125;</span><br><span class="line">        <span class="comment">// 获得 PATH METHOD 对应的 HandlersChains 赋值给 c (*Context)</span></span><br><span class="line">		<span class="keyword">if</span> value.handlers != <span class="literal">nil</span> &#123;</span><br><span class="line">			c.handlers = value.handlers</span><br><span class="line">			c.fullPath = value.fullPath</span><br><span class="line">            <span class="comment">// 调用 c.Next() 将对应的 HandlersChains 进行执行</span></span><br><span class="line">			c.Next()</span><br><span class="line">			c.writermem.WriteHeaderNow()</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> httpMethod != http.MethodConnect &amp;&amp; rPath != <span class="string">&quot;/&quot;</span> &#123;</span><br><span class="line">			<span class="keyword">if</span> value.tsr &amp;&amp; engine.RedirectTrailingSlash &#123;</span><br><span class="line">				redirectTrailingSlash(c)</span><br><span class="line">				<span class="keyword">return</span></span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> engine.RedirectFixedPath &amp;&amp; redirectFixedPath(c, root, engine.RedirectFixedPath) &#123;</span><br><span class="line">				<span class="keyword">return</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">break</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> engine.HandleMethodNotAllowed &#123;</span><br><span class="line">    	……</span><br><span class="line">	&#125;</span><br><span class="line">	……</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>POST 请求是从 POST 对应的 root *node 中找到匹配的 HandlersChains 然后赋值给 c.handlers ，之后调用 c.Next() 进行 Request 处理。</p>
 
-      
-    </div>
-
-  </div>
-
-  <div class="article-footer">
-    <div class="article-meta pull-left">
-
-    
-
-    
-    
-
-    <span class="post-tags">
-      <i class="icon-tags"></i>
-        <a href="/tags/golang/">golang</a>
-    </span>
-    
-
-    </div>
-
-    
   </div>
 </article>
 
-  
 
 
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
 
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/halalala222">Projects</a></li>
+        
+      </ul>
+    </div>
 
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%91%A2%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">为什么呢？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">解决方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Use-vs-Use"><span class="toc-number">3.</span> <span class="toc-text">Use() vs Use()</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%82%B9%E8%BF%9B-e-%E7%9A%84-Use"><span class="toc-number">3.0.1.</span> <span class="toc-text">点进 e 的 Use()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%82%B9%E8%BF%9B-admin-%E7%9A%84-User"><span class="toc-number">3.0.2.</span> <span class="toc-text">点进 admin 的 User()</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gin-%E7%9A%84%E6%BA%90%E7%A0%81%E5%AF%BC%E8%87%B4%E7%9A%84%E5%B7%AE%E5%BC%82%E5%8E%9F%E5%9B%A0%E3%80%82"><span class="toc-number">4.</span> <span class="toc-text">Gin 的源码导致的差异原因。</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Engine-%E7%BB%93%E6%9E%84%E4%BD%93"><span class="toc-number">4.0.1.</span> <span class="toc-text">Engine 结构体</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#HandlersChain"><span class="toc-number">4.0.2.</span> <span class="toc-text">HandlersChain</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#engine-Group"><span class="toc-number">4.0.3.</span> <span class="toc-text">engine.Group()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#RouterGroup"><span class="toc-number">4.0.4.</span> <span class="toc-text">RouterGroup</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#methodTrees"><span class="toc-number">4.0.5.</span> <span class="toc-text">methodTrees</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#addRoute"><span class="toc-number">4.0.6.</span> <span class="toc-text">addRoute()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E5%BA%94%E8%B7%AF%E7%94%B1%E7%9A%84-handle"><span class="toc-number">4.0.7.</span> <span class="toc-text">对应路由的 handle()</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84-POST-PUT-GET-DELETE-%E8%AF%B7%E6%B1%82"><span class="toc-number">4.0.7.1.</span> <span class="toc-text">常见的 POST　PUT　GET　DELETE　请求</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#handleHTTPRequest"><span class="toc-number">4.0.7.2.</span> <span class="toc-text">handleHTTPRequest</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E4%BA%8E-OPTIONS-%E8%AF%B7%E6%B1%82"><span class="toc-number">4.0.8.</span> <span class="toc-text">对于 OPTIONS 请求</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#serveError"><span class="toc-number">4.0.8.1.</span> <span class="toc-text">serveError()</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#c-Next"><span class="toc-number">4.0.8.2.</span> <span class="toc-text">c.Next()</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#rebuild404Handlers"><span class="toc-number">4.0.8.3.</span> <span class="toc-text">rebuild404Handlers()</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%94%B9%E5%8F%98"><span class="toc-number">4.0.9.</span> <span class="toc-text">改变</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8E%9F%E5%9B%A0"><span class="toc-number">4.0.9.1.</span> <span class="toc-text">原因</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E4%BA%8E-POST-%E8%AF%B7%E6%B1%82"><span class="toc-number">4.0.10.</span> <span class="toc-text">对于 POST 请求</span></a></li></ol></li></ol></li></ol>
+    </div>
 
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/&text=从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/&title=从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/&is_video=false&description=从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题&body=Check out this article: http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/&title=从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/&title=从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/&title=从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/&title=从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/&name=从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2023/03/09/%E4%BB%8E%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%20gin%20%E8%B7%A8%E5%9F%9F%E4%B8%AD%E9%97%B4%E4%BB%B6%EF%BC%8C%E6%97%A5%E5%BF%97%E6%98%BE%E7%A4%BA%EF%BC%8COPTION%20404%20%E7%9A%84%E9%97%AE%E9%A2%98/&t=从源码分析 gin 跨域中间件，日志显示，OPTIONS 请求 404 的问题"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
 
+    </div>
 
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
 
-
-    </main>
-
-    <footer class="site-footer">
-  <p class="site-info">
-    Proudly powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and
-    Theme by <a href="https://github.com/CodeDaraW/Hacker" target="_blank">Hacker</a>
-    </br>
-    
-    &copy; 2023 halalala222
-    
-  </p>
-</footer>
-    
-    
   </div>
 </div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2023
+    halalala222
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/halalala222">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
 </body>
 </html>
