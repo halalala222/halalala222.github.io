@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="gf 实际使用体验中踩坑 官方文档 个人感觉写得不够好，有一点混乱，并且有点不够关联。  对于使用 gf gen service 出现的问题必须！！！！！！！ 在 logic 层中定义，在一开始自定义的时候并没有使用 s 开头定义结构体名字。导致使用 gf gen service  生成的对应 service中的文件空空如也。 123type (	sNcuHome struct&amp;#123;&amp;#12">
+<meta property="og:type" content="article">
+<meta property="og:title" content="gf-learning">
+<meta property="og:url" content="http://example.com/2023/04/07/gf-learning/index.html">
+<meta property="og:site_name" content="liooooo">
+<meta property="og:description" content="gf 实际使用体验中踩坑 官方文档 个人感觉写得不够好，有一点混乱，并且有点不够关联。  对于使用 gf gen service 出现的问题必须！！！！！！！ 在 logic 层中定义，在一开始自定义的时候并没有使用 s 开头定义结构体名字。导致使用 gf gen service  生成的对应 service中的文件空空如也。 123type (	sNcuHome struct&amp;#123;&amp;#12">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-04-07T12:17:11.000Z">
+<meta property="article:modified_time" content="2023-04-09T07:10:53.128Z">
+<meta property="article:author" content="halalala222">
+<meta property="article:tag" content="golang">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>gf-learning</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/halalala222">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2023/03/30/arrayList-add%E7%9A%84%E7%BB%86%E8%8A%82/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2023/04/07/gf-learning/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2023/04/07/gf-learning/&text=gf-learning"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2023/04/07/gf-learning/&title=gf-learning"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2023/04/07/gf-learning/&is_video=false&description=gf-learning"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=gf-learning&body=Check out this article: http://example.com/2023/04/07/gf-learning/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2023/04/07/gf-learning/&title=gf-learning"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2023/04/07/gf-learning/&title=gf-learning"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2023/04/07/gf-learning/&title=gf-learning"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2023/04/07/gf-learning/&title=gf-learning"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2023/04/07/gf-learning/&name=gf-learning&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2023/04/07/gf-learning/&t=gf-learning"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#gf-%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C%E4%B8%AD%E8%B8%A9%E5%9D%91"><span class="toc-number">1.</span> <span class="toc-text">gf 实际使用体验中踩坑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E4%BA%8E%E4%BD%BF%E7%94%A8-gf-gen-service-%E5%87%BA%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">对于使用 gf gen service 出现的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#service-%E6%B3%A8%E5%86%8C"><span class="toc-number">3.</span> <span class="toc-text">service 注册</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96%E9%9C%80%E8%A6%81%E7%8B%A0%E7%8B%A0%E7%9A%84%E6%B3%A8%E5%85%A5"><span class="toc-number">4.</span> <span class="toc-text">依赖需要狠狠的注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#logic-%E5%B1%82%E7%9A%84%E6%B3%A8%E5%85%A5"><span class="toc-number">4.1.</span> <span class="toc-text">logic 层的注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E9%A9%B1%E5%8A%A8%E7%9A%84%E6%B3%A8%E5%85%A5"><span class="toc-number">4.2.</span> <span class="toc-text">数据库驱动的注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#api-%E4%B8%AD%E5%AE%9A%E4%B9%89%E7%9A%84-XxxReq-%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">5.</span> <span class="toc-text">api 中定义的 XxxReq 的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="toc-number">6.</span> <span class="toc-text">代码示例</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        gf-learning
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">halalala222</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2023-04-07T12:17:11.000Z" itemprop="datePublished">2023-04-07</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/golang/" rel="tag">golang</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="gf-实际使用体验中踩坑"><a href="#gf-实际使用体验中踩坑" class="headerlink" title="gf 实际使用体验中踩坑"></a>gf 实际使用体验中踩坑</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://goframe.org/pages/viewpage.action?pageId=1114119">官方文档</a> 个人感觉写得不够好，有一点混乱，并且有点不够关联。</li>
+</ul>
+<h2 id="对于使用-gf-gen-service-出现的问题"><a href="#对于使用-gf-gen-service-出现的问题" class="headerlink" title="对于使用 gf gen service 出现的问题"></a>对于使用 gf gen service 出现的问题</h2><p><strong>必须！！！！！！！</strong> 在 logic 层中定义，在一开始自定义的时候并没有使用 <code>s</code> 开头定义结构体名字。导致使用 <code>gf gen service </code> 生成的对应 <code>service</code>中的文件空空如也。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> (</span><br><span class="line">	sNcuHome <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>定义应该是以 <code>s</code> 开头的结构体，并且在该结构体上写方法，才可以通过 <code>gf gen service</code> 在 <code>service</code> 下生成对应的 <code>service</code>文件</p>
+<h2 id="service-注册"><a href="#service-注册" class="headerlink" title="service 注册"></a>service 注册</h2><p>在 logic 层中需要在初始化函数 <code>init</code> 中使用</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// logic </span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">	service.RegisterNcuHome(New())</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">New</span><span class="params">()</span></span> service.INcuHome &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;sNcuHome&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//service</span></span><br><span class="line"><span class="keyword">var</span> (</span><br><span class="line">	localNcuHome INcuHome</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">RegisterNcuHome</span><span class="params">(i INcuHome)</span></span> &#123;</span><br><span class="line">	localNcuHome = i</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>将 <code>service</code> 包内的全局变量进行初始化即所谓的 <code>register</code></p>
+<h2 id="依赖需要狠狠的注入"><a href="#依赖需要狠狠的注入" class="headerlink" title="依赖需要狠狠的注入"></a>依赖需要狠狠的注入</h2><h3 id="logic-层的注入"><a href="#logic-层的注入" class="headerlink" title="logic 层的注入"></a>logic 层的注入</h3><p>在 <code>logic</code> 下的 <code>logic.go</code> 需要被 <code>main.go</code> 狠狠的 input ，不然会导致 <code>service</code> 中对应的包内全局变量没有被赋值。</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> localNcuHome == <span class="literal">nil</span> &#123;</span><br><span class="line">	<span class="built_in">panic</span>(<span class="string">&quot;implement not found for interface INcuHome, forgot register?&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就会在上面的逻辑中 <code>panic</code></p>
+<h3 id="数据库驱动的注入"><a href="#数据库驱动的注入" class="headerlink" title="数据库驱动的注入"></a>数据库驱动的注入</h3><p>以及 <code>database</code> 对应的驱动也需要在 <code>main.go</code> 狠狠的 input ，</p>
+<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_ <span class="string">&quot;github.com/gogf/gf/contrib/drivers/mysql/v2&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="api-中定义的-XxxReq-的问题"><a href="#api-中定义的-XxxReq-的问题" class="headerlink" title="api 中定义的 XxxReq 的问题"></a>api 中定义的 XxxReq 的问题</h2><p>需要作为参数传入 <code>controller</code> 中，所以对应的 <code>request</code> 参数必须是 <strong>XxxReq</strong> 类型才行！！！！！！！！！！</p>
+<h2 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h2><p><a target="_blank" rel="noopener" href="https://github.com/gogf/focus-single/blob/master/main.go">官方代码示例</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/archives/">Writing</a></li>
+         
+          <li><a target="_blank" rel="noopener" href="https://github.com/halalala222">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#gf-%E5%AE%9E%E9%99%85%E4%BD%BF%E7%94%A8%E4%BD%93%E9%AA%8C%E4%B8%AD%E8%B8%A9%E5%9D%91"><span class="toc-number">1.</span> <span class="toc-text">gf 实际使用体验中踩坑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E4%BA%8E%E4%BD%BF%E7%94%A8-gf-gen-service-%E5%87%BA%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">对于使用 gf gen service 出现的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#service-%E6%B3%A8%E5%86%8C"><span class="toc-number">3.</span> <span class="toc-text">service 注册</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96%E9%9C%80%E8%A6%81%E7%8B%A0%E7%8B%A0%E7%9A%84%E6%B3%A8%E5%85%A5"><span class="toc-number">4.</span> <span class="toc-text">依赖需要狠狠的注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#logic-%E5%B1%82%E7%9A%84%E6%B3%A8%E5%85%A5"><span class="toc-number">4.1.</span> <span class="toc-text">logic 层的注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E9%A9%B1%E5%8A%A8%E7%9A%84%E6%B3%A8%E5%85%A5"><span class="toc-number">4.2.</span> <span class="toc-text">数据库驱动的注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#api-%E4%B8%AD%E5%AE%9A%E4%B9%89%E7%9A%84-XxxReq-%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">5.</span> <span class="toc-text">api 中定义的 XxxReq 的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="toc-number">6.</span> <span class="toc-text">代码示例</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2023/04/07/gf-learning/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2023/04/07/gf-learning/&text=gf-learning"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2023/04/07/gf-learning/&title=gf-learning"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2023/04/07/gf-learning/&is_video=false&description=gf-learning"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=gf-learning&body=Check out this article: http://example.com/2023/04/07/gf-learning/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2023/04/07/gf-learning/&title=gf-learning"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2023/04/07/gf-learning/&title=gf-learning"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2023/04/07/gf-learning/&title=gf-learning"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2023/04/07/gf-learning/&title=gf-learning"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2023/04/07/gf-learning/&name=gf-learning&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2023/04/07/gf-learning/&t=gf-learning"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2023
+    halalala222
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/halalala222">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+ 
+  <link
+    rel="preload"
+    href="/lib/font-awesome/css/all.min.css"
+    as="style"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript
+    ><link
+      rel="stylesheet"
+      href="/lib/font-awesome/css/all.min.css"
+  /></noscript>
+
+
+    <!-- jquery -->
+ 
+  
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+
+
+
+<!-- clipboard -->
+
+   
+    
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
